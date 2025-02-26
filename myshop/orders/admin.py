@@ -1,6 +1,12 @@
 from django.contrib import admin
 from .models import Order,OrderItem
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 # Register your models here.
+
+def order_detail(obj):
+  url = reverse('orders:admin_order_detail', args=[obj.id])
+  return mark_safe(f'<a href="{url}">View</a>')
 
 class OrderItemInLine(admin.TabularInline):
   model = OrderItem
@@ -51,7 +57,8 @@ class OrderAdmin(admin.ModelAdmin):
     'city',
     'paid',
     'created',
-    'updated'
+    'updated',
+    order_detail,
   ]
   actions     = [export_to_csv]
   list_filter = ['paid','created','updated']
